@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorContainer"
+    android:id="@+id/coordinator_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.RootActivity">
@@ -42,7 +42,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <ru.skillbranch.skillarticles.ui.custom.ArticleSubmenu
-        android:id="@+id/subMenu"
+        android:id="@+id/submenu"
         android:layout_width="200dp"
         android:layout_height="96dp"
         android:theme="@style/ArticleBarsTheme"
@@ -55,7 +55,7 @@
         tools:visibility="visible"/>
 
     <ru.skillbranch.skillarticles.ui.custom.Bottombar
-        android:id="@+id/bottomBar"
+        android:id="@+id/bottombar"
         android:theme="@style/ArticleBarsTheme"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"

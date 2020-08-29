@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
@@ -42,7 +41,7 @@ class RootActivity : AppCompatActivity() {
 
     private fun renderUI(data: ArticleState) {
         btn_settings.isChecked = data.isShowMenu
-        if (data.isShowMenu) subMenu.open() else subMenu.close()
+        if (data.isShowMenu) submenu.open() else submenu.close()
 
         btn_like.isChecked = data.isLike
         btn_bookmark.isChecked = data.isBookmark
@@ -72,8 +71,8 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun renderNotification(notify: Notify) {
-        val snackbar = Snackbar.make(coordinatorContainer, notify.message, Snackbar.LENGTH_LONG)
-            .setAnchorView(bottomBar)
+        val snackbar = Snackbar.make(coordinator_container, notify.message, Snackbar.LENGTH_LONG)
+            .setAnchorView(bottombar)
             .setActionTextColor(ContextCompat.getColor(applicationContext, R.color.color_accent_dark))
 
         when (notify) {
