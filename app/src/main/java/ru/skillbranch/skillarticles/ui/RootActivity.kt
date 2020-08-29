@@ -67,7 +67,7 @@ class RootActivity : AppCompatActivity() {
 
         toolbar.title = data.category ?: "loading"
         toolbar.subtitle = data.category ?: "loading"
-        if (data.categoryIcon != null) toolbar.logo = getDrawable(data.categoryIcon as Int)
+        if (data.categoryIcon != null) toolbar.logo = ContextCompat.getDrawable(applicationContext, data.categoryIcon as Int)
     }
 
     private fun renderNotification(notify: Notify) {
@@ -119,8 +119,8 @@ class RootActivity : AppCompatActivity() {
 
         val logo = if (toolbar.childCount > 2) toolbar.getChildAt(2) as ImageView else null
         logo?.scaleType = ImageView.ScaleType.CENTER_CROP
-        val lp = logo?.layoutParams as? Toolbar.LayoutParams
-        lp?.let {
+        logo?.adjustViewBounds = true
+        (logo?.layoutParams as? Toolbar.LayoutParams)?.let {
             it.width = this.dpToIntPx(40)
             it.height = this.dpToIntPx(40)
             it.marginEnd = this.dpToIntPx(16)
