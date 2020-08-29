@@ -79,17 +79,20 @@ class RootActivity : AppCompatActivity() {
             is Notify.TextMessage -> {}
             is Notify.ActionMessage -> {
                 with(snackbar) {
-                    setBackgroundTint(ContextCompat.getColor(applicationContext, R.color.design_default_color_error))
-                    setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
-                    setActionTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+                    setActionTextColor(ContextCompat.getColor(applicationContext, R.color.color_accent_dark))
                     setAction(notify.actionLabel) {
                         notify.actionHandler?.invoke()
                     }
                 }
             }
             is Notify.ErrorMessage -> {
-                snackbar.setAction(notify.errorLabel) {
-                    notify.errorHandler?.invoke()
+                with(snackbar) {
+                    setBackgroundTint(ContextCompat.getColor(applicationContext, R.color.design_default_color_error))
+                    setTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+                    setActionTextColor(ContextCompat.getColor(applicationContext, android.R.color.white))
+                    setAction(notify.errLabel) {
+                        notify.errHandler?.invoke()
+                    }
                 }
             }
         }
