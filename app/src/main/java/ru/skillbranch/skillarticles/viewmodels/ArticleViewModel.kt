@@ -110,11 +110,18 @@ class ArticleViewModel(private val articleId: String):
     }
 
     override fun handleSearchMode(isSearch: Boolean) {
-
+        updateState { it.copy(
+            isSearch = isSearch,
+            isShowMenu = false,
+            searchPosition = 0
+        ) }
     }
 
     override fun handleSearch(query: String?) {
-
+        updateState { it.copy(
+            searchQuery = query,
+            searchPosition = 0
+        ) }
     }
 }
 
