@@ -123,6 +123,10 @@ class ArticleViewModel(private val articleId: String):
             searchPosition = 0
         ) }
     }
+
+    fun handleUpResult() {}
+
+    fun handleDownResult() {}
 }
 
 data class ArticleState(
