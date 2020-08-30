@@ -1,6 +1,5 @@
 package ru.skillbranch.skillarticles.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,14 +16,18 @@ import kotlinx.android.synthetic.main.layout_submenu.*
 import kotlinx.android.synthetic.main.search_view_layout.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.extensions.setMarginOptionally
+import ru.skillbranch.skillarticles.ui.base.BaseActivity
 import ru.skillbranch.skillarticles.viewmodels.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
-import ru.skillbranch.skillarticles.viewmodels.Notify
-import ru.skillbranch.skillarticles.viewmodels.ViewModelFactory
+import ru.skillbranch.skillarticles.viewmodels.base.Notify
+import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
-class RootActivity : AppCompatActivity() {
+class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
-    private lateinit var viewModel: ArticleViewModel
+    override val layout: Int = R.layout.activity_root
+
+    override lateinit var viewModel: ArticleViewModel
 
     private var isSearching = false
     private var searchQuery: String? = null
@@ -46,9 +49,35 @@ class RootActivity : AppCompatActivity() {
         }
     }
 
+    override fun setupViews() {
+
+    }
+
+    override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun renderSearchPosition(searchPosition: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun clearSearchResult() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showSearchBar() {
+        bottombar.setSearchState(true)
+        scroll.setMarginOptionally(bottom = dpToIntPx(56))
+    }
+
+    override fun hideSearchBar() {
+        bottombar.setSearchState(false)
+        scroll.setMarginOptionally(bottom = dpToIntPx(0))
+    }
+
     private fun renderUI(data: ArticleState) {
 
-        bottombar.setSearchState(data.isSearch)
+        if (data.isSearch) showSearchBar() else hideSearchBar()
 
         btn_settings.isChecked = data.isShowMenu
         if (data.isShowMenu) submenu.open() else submenu.close()

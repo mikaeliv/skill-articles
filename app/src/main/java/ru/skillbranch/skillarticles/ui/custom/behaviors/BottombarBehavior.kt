@@ -27,8 +27,9 @@ class BottombarBehavior: CoordinatorLayout.Behavior<Bottombar>() {
         consumed: IntArray,
         type: Int
     ) {
-        Log.e("BottombarBehavior", "dy : $dy  translationY  : ${child.translationY}")
-        child.translationY = MathUtils.clamp(child.translationY + dy, 0f, child.minHeight.toFloat())
+        if (!child.isSearchMode) {
+            child.translationY = MathUtils.clamp(child.translationY + dy, 0f, child.minHeight.toFloat())
+        }
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
     }
 }
