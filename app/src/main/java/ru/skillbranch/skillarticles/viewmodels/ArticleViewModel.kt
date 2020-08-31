@@ -1,6 +1,7 @@
 package ru.skillbranch.skillarticles.viewmodels
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
@@ -8,6 +9,7 @@ import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.extensions.indexesOf
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -101,7 +103,11 @@ class ArticleViewModel(private val articleId: String):
     }
 
     override fun handleBookmark() {
-        updateState { it.copy(isBookmark = !it.isBookmark) }
+        val info = currentState.toArticlePersonalInfo()
+        repository.updateArticlePersonalInfo(info.copy(isBookmark = !info.isBookmark))
+
+        val msg = if (currentState.isBookmark) "Add to bookmarks" else "Remove from bookmarks"
+        notify(Notify.TextMessage(msg))
     }
 
     override fun handleShare() {
@@ -122,15 +128,22 @@ class ArticleViewModel(private val articleId: String):
     }
 
     override fun handleSearch(query: String?) {
+        query ?: return
+        val result = (currentState.content.firstOrNull() as? String).indexesOf(query)
+            .map { it to it + query.length }
         updateState { it.copy(
             searchQuery = query,
-            searchPosition = 0
+            searchResults = result
         ) }
     }
 
-    fun handleUpResult() {}
+    fun handleUpResult() {
+        updateState { it.copy(searchPosition = it.searchPosition.dec()) }
+    }
 
-    fun handleDownResult() {}
+    fun handleDownResult() {
+        updateState { it.copy(searchPosition = it.searchPosition.inc()) }
+    }
 }
 
 data class ArticleState(
@@ -156,11 +169,23 @@ data class ArticleState(
     val content: List<Any> = emptyList(),
     val reviews: List<Any> = emptyList()
 ): IViewModelState {
-    override fun restore(savedState: Bundle): IViewModelState {
-        TODO("Not yet implemented")
+    override fun restore(savedState: Bundle): ArticleState {
+        return copy(
+            isSearch = savedState["isSearch"] as Boolean,
+            searchQuery = savedState["searchQuery"] as? String,
+            searchResults = savedState["searchResults"] as List<Pair<Int, Int>>,
+            searchPosition = savedState["searchPosition"] as Int
+        )
     }
 
     override fun save(outState: Bundle) {
-        TODO("Not yet implemented")
+        outState.putAll(
+            bundleOf(
+                "isSearch" to isSearch,
+                "searchQuery" to searchQuery,
+                "searchResults" to searchResults,
+                "searchPosition" to searchPosition
+            )
+        )
     }
 }

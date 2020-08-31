@@ -43,7 +43,7 @@ class Bottombar @JvmOverloads constructor(
         super.onRestoreInstanceState(state)
         if (state is SavedState) {
             isSearchMode = state.ssIsSearchMode
-            reveal.isVisible = !isSearchMode
+            reveal.isVisible = isSearchMode
             group_bottom.isVisible = !isSearchMode
         }
     }

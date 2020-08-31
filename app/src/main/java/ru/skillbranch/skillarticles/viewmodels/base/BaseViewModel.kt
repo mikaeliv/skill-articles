@@ -1,11 +1,11 @@
 package ru.skillbranch.skillarticles.viewmodels.base
 
+import android.os.Bundle
 import androidx.annotation.UiThread
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
-import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 
-abstract class BaseViewModel<T: IViewModelState>(initState: T) : ViewModel() {
+abstract class BaseViewModel<T : IViewModelState>(initState: T) : ViewModel() {
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val notifications = MutableLiveData<Event<Notify>>()
 
@@ -44,8 +44,7 @@ abstract class BaseViewModel<T: IViewModelState>(initState: T) : ViewModel() {
      */
     @UiThread
     protected fun notify(content: Notify) {
-        notifications.value =
-            Event(content)
+        notifications.value = Event(content)
     }
 
     /***
@@ -63,9 +62,7 @@ abstract class BaseViewModel<T: IViewModelState>(initState: T) : ViewModel() {
      */
     fun observeNotifications(owner: LifecycleOwner, onNotify: (notification: Notify) -> Unit) {
         notifications.observe(owner,
-            EventObserver {
-                onNotify(it)
-            })
+            EventObserver { onNotify(it) })
     }
 
     /***
@@ -80,6 +77,15 @@ abstract class BaseViewModel<T: IViewModelState>(initState: T) : ViewModel() {
         state.addSource(source) {
             state.value = onChanged(it, currentState) ?: return@addSource
         }
+    }
+
+    fun saveState(outState: Bundle){
+        currentState.save(outState)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun restoreState(savedState:Bundle){
+        state.value = currentState.restore(savedState) as T
     }
 
 }
