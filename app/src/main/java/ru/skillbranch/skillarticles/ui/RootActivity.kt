@@ -14,6 +14,7 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
+import androidx.core.text.toSpannable
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
@@ -57,7 +58,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
-        val content = tv_search_result.text as Spannable
+        val content = tv_search_result.text.toSpannable()
 
         //clear entry search result
         clearSearchResult()
@@ -76,7 +77,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchPosition(searchPosition: Int) {
-        val content = tv_search_result.text as Spannable
+        val content = tv_search_result.text.toSpannable()
 
         val spans = content.getSpans<SearchSpan>()
         // clear last search position
@@ -96,7 +97,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun clearSearchResult() {
-        val content = tv_search_result.text as Spannable
+        val content = tv_search_result.text.toSpannable()
         content.getSpans<SearchSpan>()
             .forEach { content.removeSpan(it) }
     }
