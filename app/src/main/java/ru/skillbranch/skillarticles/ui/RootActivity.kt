@@ -11,10 +11,12 @@ import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
@@ -39,9 +41,12 @@ import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
 class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
-    private val bgColor by AttrValue(R.attr.colorSecondary)
-    private val fgColor by AttrValue(R.attr.colorOnSecondary)
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val bgColor by AttrValue(R.attr.colorSecondary)
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val fgColor by AttrValue(R.attr.colorOnSecondary)
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     override val binding: ArticleBinding by lazy { ArticleBinding() }
 
     override val layout: Int = R.layout.activity_root
@@ -58,7 +63,8 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
-        val content = tv_search_result.text.toSpannable()
+        val content = SpannableString(tv_search_result.text)
+        tv_search_result.isVisible
 
         //clear entry search result
         clearSearchResult()
@@ -77,7 +83,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchPosition(searchPosition: Int) {
-        val content = tv_search_result.text.toSpannable()
+        val content = SpannableString(tv_search_result.text)
 
         val spans = content.getSpans<SearchSpan>()
         // clear last search position
@@ -97,7 +103,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun clearSearchResult() {
-        val content = tv_search_result.text.toSpannable()
+        val content = SpannableString(tv_search_result.text)
         content.getSpans<SearchSpan>()
             .forEach { content.removeSpan(it) }
     }
@@ -224,11 +230,10 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         return super.onCreateOptionsMenu(menu)
     }
 
-    inner class ArticleBinding(): Binding() {
+    inner class ArticleBinding : Binding() {
 
         var isFocusedSearch = false
         var searchQuery: String? = null
-
 
         private var isLoadingContent by ObserveProp(true)
 
@@ -303,6 +308,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             if (data.title != null) title = data.title
             if (data.category != null) category = data.category
             if (data.categoryIcon != null) categoryIcon = data.categoryIcon as Int
+            if (data.content.isNotEmpty()) content = data.content.first() as String
 
             isLoadingContent = data.isLoadingContent
             isSearch = data.isSearch
