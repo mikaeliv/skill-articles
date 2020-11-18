@@ -248,11 +248,11 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         }
         private var isBigText: Boolean by RenderProp(false) {
             if (it) {
-                tvTextContent.textSize = 18f
+                tv_text_content.textSize = 18f
                 btn_text_up.isChecked = true
                 btn_text_down.isChecked = false
             } else {
-                tvTextContent.textSize = 14f
+                tv_text_content.textSize = 14f
                 btn_text_up.isChecked = false
                 btn_text_down.isChecked = true
             }
@@ -271,8 +271,8 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         private var searchPosition: Int by ObserveProp(0)
 
         private var content: String by ObserveProp("loading") {
-            tvTextContent.setText(it, TextView.BufferType.SPANNABLE)
-            tvTextContent.movementMethod = ScrollingMovementMethod()
+            tv_text_content.setText(it, TextView.BufferType.SPANNABLE)
+            tv_text_content.movementMethod = ScrollingMovementMethod()
         }
 
         override fun onFinishInflate() {
