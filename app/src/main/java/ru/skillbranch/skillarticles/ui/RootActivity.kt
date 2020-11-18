@@ -2,7 +2,6 @@ package ru.skillbranch.skillarticles.ui
 
 import android.os.Bundle
 import android.text.Selection
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.method.ScrollingMovementMethod
 import android.view.Menu
@@ -15,7 +14,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
-import androidx.core.text.toSpannable
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
@@ -63,8 +61,8 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
-        val content = SpannableString(tv_search_result.text)
-        tv_search_result.isVisible
+        val content = SpannableString(tv_text_content.text)
+        tv_text_content.isVisible
 
         //clear entry search result
         clearSearchResult()
@@ -83,7 +81,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchPosition(searchPosition: Int) {
-        val content = SpannableString(tv_search_result.text)
+        val content = SpannableString(tv_text_content.text)
 
         val spans = content.getSpans<SearchSpan>()
         // clear last search position
@@ -103,7 +101,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun clearSearchResult() {
-        val content = SpannableString(tv_search_result.text)
+        val content = SpannableString(tv_text_content.text)
         content.getSpans<SearchSpan>()
             .forEach { content.removeSpan(it) }
     }
