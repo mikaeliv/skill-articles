@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.TypedValue
+import androidx.core.content.ContextCompat
 
 fun Context.dpToPx(dp: Int): Float {
     return TypedValue.applyDimension(
@@ -22,6 +23,8 @@ fun Context.dpToIntPx(dp: Int): Int {
         this.resources.displayMetrics
     ).toInt()
 }
+
+fun Context.attrValue(value: Int) = ContextCompat.getColor(this, value)
 
 val Context.isNetworkAvailable: Boolean
     get() {
