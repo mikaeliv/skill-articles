@@ -7,15 +7,15 @@ object MarkdownParser {
     private val LINE_SEPARATOR = "\n"
 
     //group regex
-    private const val UNORDERED_LIST_ITEM_GROUP = "" //TODO implement me
-    private const val HEADER_GROUP = "" //TODO implement me
-    private const val QUOTE_GROUP = "" //TODO implement me
-    private const val ITALIC_GROUP = "" //TODO implement me
-    private const val BOLD_GROUP ="" //TODO implement me
-    private const val STRIKE_GROUP = "" //TODO implement me
-    private const val RULE_GROUP = "" //TODO implement me
-    private const val INLINE_GROUP = "" //TODO implement me
-    private const val LINK_GROUP = "" //TODO implement me
+    private const val UNORDERED_LIST_ITEM_GROUP = "(^[*+-] .+$)"
+    private const val HEADER_GROUP = "(^#{1,6} .+?$)"
+    private const val QUOTE_GROUP = "(^> .+?$)"
+    private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"
+    private const val BOLD_GROUP ="((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!_)_{2}[^_].*?[^_]?_{2}(?!_))"
+    private const val STRIKE_GROUP = ""
+    private const val RULE_GROUP = "(^[-_*]{3}$)"
+    private const val INLINE_GROUP = "((?<!`)`[^`\\s].*?[^`\\s]?`(?!`))"
+    private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)|^\\[*?]\\(.*?\\))"
     private const val BLOCK_CODE_GROUP = "" //TODO implement me
     private const val ORDER_LIST_GROUP = "" //TODO implement me
 
@@ -64,7 +64,7 @@ object MarkdownParser {
             var text: CharSequence
 
             //groups range for iterate by groups (1..9) or (1..11) optionally
-            val groups = 1..9
+            val groups = 1..11
             var group = -1
             for (gr in groups) {
                 if (matcher.group(gr) != null) {
