@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.data
+package ru.skillbranch.skillarticles.data.delegates
 
 import ru.skillbranch.skillarticles.data.local.PrefManager
 import kotlin.properties.ReadWriteProperty
