@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.markdown
+package ru.skillbranch.skillarticles.data.repositories
 
 import java.util.regex.Pattern
 
@@ -12,12 +12,12 @@ object MarkdownParser {
     private const val QUOTE_GROUP = "(^> .+?$)"
     private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"
     private const val BOLD_GROUP ="((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!_)_{2}[^_].*?[^_]?_{2}(?!_))"
-    private const val STRIKE_GROUP = ""
+    private const val STRIKE_GROUP = "(~~.+?~~)"
     private const val RULE_GROUP = "(^[-_*]{3}$)"
     private const val INLINE_GROUP = "((?<!`)`[^`\\s].*?[^`\\s]?`(?!`))"
     private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)|^\\[*?]\\(.*?\\))"
-    private const val BLOCK_CODE_GROUP = "" //TODO implement me
-    private const val ORDER_LIST_GROUP = "" //TODO implement me
+    private const val BLOCK_CODE_GROUP = "(^```[\\s\\S]+?```$)"
+    private const val ORDER_LIST_GROUP = "(^\\d{1,2}\\.\\s.+?$)"
 
     //result regex
     private const val MARKDOWN_GROUPS = "$UNORDERED_LIST_ITEM_GROUP|$HEADER_GROUP|$QUOTE_GROUP" +
@@ -170,14 +170,48 @@ object MarkdownParser {
                     parents.add(element)
                     lastStartIndex = endIndex
                 }
-                //10 -> BLOCK CODE - optionally
+                //10 -> BLOCK CODE
                 10 -> {
-                    //TODO implement me
+                    text = string.subSequence(startIndex.plus(3), endIndex.plus(-3)).toString()
+
+                    if (text.contains(LINE_SEPARATOR)) {
+                        for ((index, line) in text.lines().withIndex()) {
+                            when (index) {
+                                text.lines().lastIndex -> parents.add(
+                                    Element.BlockCode(
+                                        Element.BlockCode.Type.END,
+                                        line
+                                    )
+                                )
+                                0 -> parents.add(
+                                    Element.BlockCode(
+                                        Element.BlockCode.Type.START,
+                                        line + LINE_SEPARATOR
+                                    )
+                                )
+                                else -> parents.add(
+                                    Element.BlockCode(
+                                        Element.BlockCode.Type.MIDDLE,
+                                        line + LINE_SEPARATOR
+                                    )
+                                )
+                            }
+                        }
+                    } else parents.add(Element.BlockCode(Element.BlockCode.Type.SINGLE, text))
+
+                    lastStartIndex = endIndex
                 }
 
                 //11 -> NUMERIC LIST
                 11 -> {
-                    //TODO implement me
+                    val reg = "(^\\d{1,2}.)".toRegex().find(string.substring(startIndex, endIndex))
+                    val order = reg!!.value
+                    text = string.subSequence(startIndex.plus(order.length.inc()), endIndex).toString()
+
+                    val subs = findElements(text)
+                    val element = Element.OrderedListItem(order, text.toString(), subs)
+                    parents.add(element)
+                    lastStartIndex = endIndex
                 }
             }
 

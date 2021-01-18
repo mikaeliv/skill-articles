@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.markdown.spans
+package ru.skillbranch.skillarticles.ui.custom.spans
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,14 +7,14 @@ import android.text.style.LeadingMarginSpan
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
 
-class UnorderedListSpan(
+class BlockquotesSpan(
     @Px
     private val gapWidth: Float,
     @Px
-    private val bulletRadius: Float,
+    private val quoteWidth: Float,
     @ColorInt
-    private val bulletColor: Int
-) : LeadingMarginSpan {
+    private val lineColor: Int
+): LeadingMarginSpan {
 
     override fun drawLeadingMargin(
         c: Canvas,
@@ -30,31 +30,32 @@ class UnorderedListSpan(
         first: Boolean,
         layout: Layout?
     ) {
-        // only for first line draw bullet
-        if (first) {
-            p.withCustomColor {
-                c.drawCircle(
-                    gapWidth + x + bulletRadius,
-                    (top + bottom) / 2f,
-                    bulletRadius,
-                    p
-                )
-            }
+        p.withCustomColor {
+            c.drawLine(
+                quoteWidth / 2f,
+                top.toFloat(),
+                quoteWidth / 2f,
+                bottom.toFloat(),
+                p
+            )
         }
     }
 
-    override fun getLeadingMargin(first: Boolean): Int = (4 * bulletRadius + gapWidth).toInt()
+    override fun getLeadingMargin(first: Boolean): Int = (quoteWidth + gapWidth).toInt()
 
     private inline fun Paint.withCustomColor(block: () -> Unit) {
         val oldColor = color
         val oldStyle = style
+        val oldWidth = strokeWidth
 
-        color = bulletColor
-        style = Paint.Style.FILL
+        color = lineColor
+        style = Paint.Style.STROKE
+        strokeWidth = quoteWidth
 
         block()
 
         color = oldColor
         style = oldStyle
+        strokeWidth = oldWidth
     }
 }
