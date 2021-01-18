@@ -30,7 +30,9 @@ class MarkdownBuilder(context: Context) {
     private val headerMarginBottom = context.dpToPx(8)
     private val ruleWidth = context.dpToPx(2)
     private val cornerRadius = context.dpToPx(8)
-    private val linkIcon = ContextCompat.getDrawable(context, R.drawable.ic_link_black_24dp)!!
+    private val linkIcon = ContextCompat.getDrawable(context, R.drawable.ic_link_black_24dp)!!.apply {
+        setTint(colorSecondary)
+    }
 
     fun markdownToSpan(string: String): SpannedString {
         val markdown = MarkdownParser.parse(string)
@@ -105,7 +107,7 @@ class MarkdownBuilder(context: Context) {
                     }
                 }
                 is Element.Link -> {
-                    inSpans(IconLinkSpan(linkIcon, colorSecondary, gap, colorPrimary, strikeWidth),
+                    inSpans(IconLinkSpan(linkIcon, gap, colorPrimary, strikeWidth),
                     URLSpan(element.link)) {
                         append(element.text)
                     }
