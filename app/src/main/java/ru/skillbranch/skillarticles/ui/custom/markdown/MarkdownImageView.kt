@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import ru.skillbranch.skillarticles.R
@@ -113,7 +114,11 @@ class MarkdownImageView private constructor(
 
         tv_title.setText(title, TextView.BufferType.SPANNABLE)
 
-
+        Glide
+            .with(context)
+            .load(url)
+            .transform(AspectRatioResizeTransform())
+            .into(iv_image)
 
         if (alt != null) {
             tv_alt = TextView(context).apply {
