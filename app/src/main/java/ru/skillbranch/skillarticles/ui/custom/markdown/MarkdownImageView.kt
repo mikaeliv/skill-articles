@@ -93,7 +93,7 @@ class MarkdownImageView private constructor(
         }
         addView(iv_image)
 
-        tv_title = MarkdownTextView(context).apply {
+        tv_title = MarkdownTextView(context, fontSize * 0.75f).apply {
             setText("title", TextView.BufferType.SPANNABLE)
             setTextColor(colorOnBackground)
             gravity = Gravity.CENTER
